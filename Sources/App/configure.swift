@@ -23,11 +23,11 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     /// Register the configured SQLite database to the database config.
     var databases = DatabasesConfig()
     databases.add(database: sqlite, as: .sqlite)
-    services.register(databases)
+        services.register(databases)
 
     /// Configure migrations
     var migrations = MigrationConfig()
-    migrations.add(model: Todo.self, database: .sqlite)
+    migrations.add(model: Acronym.self, database: .sqlite)
     services.register(migrations)
 
 }
