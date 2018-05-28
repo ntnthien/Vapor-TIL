@@ -7,10 +7,14 @@ public func routes(_ router: Router) throws {
         return "Hello, world!"
     }
 
-    router.post("api", "acronym") { (req) -> Future<Acronym> in
+    router.post("api", "acronyms") { (req) -> Future<Acronym> in
         return try req.content.decode(Acronym.self)
             .flatMap(to: Acronym.self, { (acronym) in
                 return acronym.save(on: req)
             })
+    }
+    
+    router.get("api", "acronyms") { req -> Future<[Acronym]> in
+        return try Acronym.query(on: req).all()
     }
 }
