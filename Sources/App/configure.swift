@@ -16,7 +16,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     middlewares.use(ErrorMiddleware.self) // Catches errors and converts to HTTP response
     services.register(middlewares)
 
-    /// Register the configured SQLite database to the database config.
+    /// Register the configured Postgres database to the database config.
     var databases = DatabasesConfig()
     
     let hostname = Environment.get("DATABASE_HOSTNAME")
@@ -25,20 +25,19 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     let databaseName = Environment.get("DATABASE_DB") ?? "vapor"
     let password = Environment.get("DATABASE_PASSWORD")
         ?? "password"
-    // 3
+
     let databaseConfig = PostgreSQLDatabaseConfig(
         hostname: hostname,
         username: username,
         database: databaseName,
         password: password)
-    // 4
     let database = PostgreSQLDatabase(config: databaseConfig)
-    // 5
     databases.add(database: database, as: .psql)
-    // 6
     services.register(databases)
+    
     /// Configure migrations
     var migrations = MigrationConfig()
+    migrations.add(model: User.self, database: .psql)
     migrations.add(model: Acronym.self, database: .psql)
     services.register(migrations)
 

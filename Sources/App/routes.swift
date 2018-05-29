@@ -8,8 +8,12 @@ public func routes(_ router: Router) throws {
         return "Hello, world!"
     }
     
+    // Acronyms
     let acronymsController = AcronymsController()
-    
     try router.register(collection: acronymsController)
-
+    
+    // User
+    let usersController = UsersController()
+    try router.register(collection: usersController)
+    
 }
