@@ -12,8 +12,10 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 
     /// Register middleware
     var middlewares = MiddlewareConfig() // Create _empty_ middleware config
+
     /// middlewares.use(FileMiddleware.self) // Serves files from `Public/` directory
     middlewares.use(ErrorMiddleware.self) // Catches errors and converts to HTTP response
+
     services.register(middlewares)
 
     /// Register the configured Postgres database to the database config.
@@ -39,6 +41,11 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     var migrations = MigrationConfig()
     migrations.add(model: User.self, database: .psql)
     migrations.add(model: Acronym.self, database: .psql)
+    migrations.add(model: Category.self, database: .psql)
+    migrations.add(model: AcronymCategoryPivot.self, database: .psql)
     services.register(migrations)
 
+    var commandConfig = CommandConfig.default()
+    commandConfig.use(RevertCommand.self, as: "revert")
+    services.register(commandConfig)
 }
