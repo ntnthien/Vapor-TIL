@@ -2,15 +2,6 @@
   "object": {
     "pins": [
       {
-        "package": "APIErrorMiddleware",
-        "repositoryURL": "https://github.com/skelpo/APIErrorMiddleware.git",
-        "state": {
-          "branch": null,
-          "revision": "36a15683f46e490aaace79ab2a42cc5517ba79bf",
-          "version": "0.3.2"
-        }
-      },
-      {
         "package": "Console",
         "repositoryURL": "https://github.com/vapor/console.git",
         "state": {
@@ -71,6 +62,15 @@
           "branch": null,
           "revision": "82b97f68471830759a3a8f90f53df243d0c97db1",
           "version": "3.0.4"
+        }
+      },
+      {
+        "package": "Leaf",
+        "repositoryURL": "https://github.com/vapor/leaf.git",
+        "state": {
+          "branch": null,
+          "revision": "a71cb0cd29ec88ee72baa00668c05e327114f27c",
+          "version": "3.0.0-rc.2.2"
         }
       },
       {
