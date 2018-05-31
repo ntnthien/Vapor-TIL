@@ -25,11 +25,29 @@ struct WebsiteController: RouteCollection {
         let users: [User]
     }
     
+    struct AllCategoriesContext: Encodable {
+        let title = "All Categories"
+        let categories: Future<[Category]>
+    }
+    
+    struct CategoryContext: Encodable {
+        // 1
+        let title: String
+        // 2
+        let category: Category
+        // 3
+        let acronyms: Future<[Acronym]>
+    }
+    
     func boot(router: Router) throws {
         router.get(use: indexHandler)
         router.get("acronyms", Acronym.parameter, use: acronymHandler)
         router.get("users", User.parameter, use: userHandler)
         router.get("users", use: allUsersHandler)
+        
+        router.get("categories", use: allCategoriesHandler)
+        router.get("categories", Category.parameter,
+            use: categoryHandler)
 
     }
     
@@ -72,14 +90,34 @@ struct WebsiteController: RouteCollection {
     }
     
     func allUsersHandler(_ req: Request) throws -> Future<View> {
-        // 2
         return User.query(on: req)
             .all()
             .flatMap(to: View.self) { users in
-                // 3
                 let context = AllUsersContext(title: "All Users",
                                               users: users)
                 return try req.view().render("allUsers", context)
+        }
+    }
+    
+    func allCategoriesHandler(_ req: Request) throws
+        -> Future<View> {
+            let categories = Category.query(on: req).all()
+            let context = AllCategoriesContext(categories: categories)
+            return try req.view().render("allCategories", context)
+    }
+    
+    func categoryHandler(_ req: Request) throws -> Future<View> {
+        // 1
+        return try req.parameters.next(Category.self)
+            .flatMap(to: View.self) { category in
+                // 2
+                let acronyms = try category.acronyms.query(on: req).all()
+                // 3
+                let context = CategoryContext(title: category.name,
+                                              category: category,
+                                              acronyms: acronyms)
+                // 4
+                return try req.view().render("category", context)
         }
     }
 }
